@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初识VUE</title>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+</head>
+
+<body>
+    <!-- 准备一个容器div -->
+    <div id="root">
+        <h2>人员列表</h2>
+        <input type="text" placeholder="请输入姓名" v-model="keyWord">
+        <button @click='sortType = 1'>按年龄升序</button>
+        <button @click='sortType = 2'>按年龄降序</button>
+        <button @click='sortType = 0'>原顺序</button>
+        <button @click='updateMei'>更新马冬梅信息</button>
+        <br><br>
+        <ul>
+            <li v-for="(person, index) in fmtPersons" :key="index">{{person.name}}---{{person.age}}岁---{{person.sex}}
+            </li>
+        </ul>
+    </div>
+    <script>
+        // vue会监视data中所有对象层次的属性，且他是通过添加set方法来进行监视
+        // vue中的数组也实现了监视，重写数组的一系列更新方法做了两件事：
+        // 1）调用了原生对应的数组方法处理数组 2）更新界面
+        
+        const vm = new Vue({
+            el: '#root',
+            data: {
+                sortType: 0,
+                keyWord: '',
+                persons: [{
+                        id: '001',
+                        name: '马冬梅',
+                        age: 35,
+                        sex: '女'
+                    },
+                    {
+                        id: '002',
+                        name: '周冬雨',
+                        age: 29,
+                        sex: '女'
+                    },
+                    {
+                        id: '003',
+                        name: '周杰伦',
+                        age: 41,
+                        sex: '男'
+                    },
+                    {
+                        id: '004',
+                        name: '温兆伦',
+                        age: 25,
+                        sex: '男'
+                    }
+                ]
+            },
+            methods: {
+                updateMei() {
+                    this.persons[0] = {
+                        name: '佩奇',
+                        age: 99,
+                        sex: '男'
+                    }
+                    this.persons.push()
+                }
+            },
+            // 如果想要对原数据进行加工且不影响原数据的使用最好用computed
+            // 使用computed过滤不影响原数据
+            computed: {
+                fmtPersons() {
+                    const {
+                        persons,
+                        keyWord
+                    } = this
+                    const arr = persons.filter(p => p.name.indexOf(keyWord) !== -1)
+                    if (this.sortType) {
+                        arr.sort((a, b) => {
+                            if (this.sortType == 1) {
+                                return a.age - b.age
+                            } else return b.age - a.age
+                        })
+                    }
+                    return arr
+                }
+            }
+            // 使用watch过滤会破坏原数据
+        })
+    </script>
+</body>
+
+</html>
