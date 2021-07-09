@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初识VUE</title>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+</head>
+<body>
+    <!-- 准备一个容器div -->
+    <div id="root">
+        <h2>人员列表</h2>
+        <input type="text" placeholder="请输入姓名" v-model="keyWord"> <br><br>
+        <ul>
+            <li v-for="(person, index) in fmtPersons" :key="index">{{person.name}}---{{person.age}}---{{person.sex}}岁</li>
+        </ul>
+    </div>
+    <script>
+        const vm = new Vue({  
+            el: '#root', 
+            data: {
+                keyWord: '',
+                persons: [
+                    { id: '001', name: '马冬梅', age: 35, sex: '女'},
+                    { id: '002', name: '周冬雨', age: 29, sex: '女'},
+                    { id: '003', name: '周杰伦', age: 41, sex: '男'},
+                    { id: '004', name: '温兆伦', age: 25, sex: '男'}
+                ]
+            },
+            // 如果想要对原数据进行加工且不影响原数据的使用最好用computed
+            // 使用computed过滤不影响原数据
+            computed: {
+                fmtPersons() {
+                    const {persons,keyWord} = this
+                    return persons.filter( p => p.name.indexOf(keyWord) !== -1)
+                }
+            }
+            // 使用watch过滤会破坏原数据
+        })
+    </script>
+</body>
+</html>
