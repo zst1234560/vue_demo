@@ -75,6 +75,12 @@ export default {
     background-color: #da4f49;
     border: 1px solid #bd362f;
   }
+  .btn-edit {
+    color: #fff;
+    background-color: skyblue;
+    border: 1px solid rgb(79, 149, 177);
+    margin-right: 5px;
+  }
 
   .btn-danger:hover {
     color: #fff;
@@ -94,4 +100,5 @@ export default {
     border: 1px solid #ddd;
     border-radius: 5px;
   }
+  
 </style>

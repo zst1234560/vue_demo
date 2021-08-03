@@ -1,22 +1,34 @@
 <template>
   <li
-  :class="{'high-light':isEnter}"
-  @mouseenter="isEnter = true"
-  @mouseleave="isEnter = false"
+    :class="{'high-light':isEnter}"
+    @mouseenter="isEnter = true"
+    @mouseleave="isEnter = false"
   >
     <label>
       <input
-      type="checkbox"
-      :checked='todo.done'
-      @change='updateTodo(index,$event)'
+        type="checkbox"
+        :checked='todo.done'
+        @change='updateTodo(index,$event)'
       />
-      <span>{{todo.name}}</span>
+      <span v-show="!todo.isEdit">{{todo.name}}</span>
+      <input
+        type="text"
+        v-show="todo.isEdit"
+        v-model="todo.name"
+        @blur="updateEdit(index,$event)"
+        ref="editTodoIpt"
+      >
     </label>
     <button
       class="btn btn-danger"
       :style="{display: isEnter ? 'block' : 'none'}"
       @click="deleteT()"
     >删除</button>
+    <button
+      class="btn btn-edit"
+      :style="{display: isEnter ? 'block' : 'none'}"
+      @click="editTodo(todo)"
+    >编辑</button>
   </li>
 </template>
 
@@ -32,10 +44,21 @@ export default {
         updateTodo(index, event) {
             this.updatedTodos(index,event.target.checked)
         },
+        updateEdit(index,event) {
+          if (event.target.value == '') return alert('输入内容不能为空')
+          this.todo.isEdit = false
+          this.updatedTodo(index,event.target.value)
+        },
         deleteT() {
           if(confirm('确认删除吗')) {
             this.deleteTodo(this.todo.id)
           }
+        },
+        editTodo(todo) {
+          this.$set(todo,'isEdit',true)
+          this.$nextTick(function() {
+            this.$refs.editTodoIpt.focus()
+          })
         }
     }
 }
@@ -77,6 +100,6 @@ li:last-child {
   border-bottom: none;
 }
 .high-light {
-    background-color: #ddd;
+  background-color: #ddd;
 }
 </style>
